@@ -99,11 +99,6 @@ static int Remap(lua_State *L) {
 {
   remap(src_image_cv, dst_image_cv, map1_cv, empty_map, CV_INTER_CUBIC,  BORDER_CONSTANT);
 }
-else if (interpolationMode.compare("INTER_AREA"))
-{
-  remap(src_image_cv, dst_image_cv, map1_cv, empty_map, CV_INTER_AREA,  BORDER_CONSTANT);
-}
-
   for (int i = 0; i < h; ++i)
     for (int j = 0; j < w; ++j) {
       Vec3b & v = dst_image_cv.at<Vec3b>(i, j);
@@ -395,7 +390,6 @@ static const luaL_reg libopencv24_init [] =
     {"ComputeFREAKfromKeyPoints", ComputeFREAKfromKeyPoints},
     {"Remap",        Remap},
     {"TrainFREAK",   TrainFREAK},
-    {"TestingFunc",  TestingFunc},
     {"MatchFREAK",   MatchFREAK},
     {"ComputeFAST",  ComputeFAST}, 
     {"Version",      version},
