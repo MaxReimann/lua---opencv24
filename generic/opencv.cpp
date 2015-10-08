@@ -14,7 +14,8 @@
 
 #include "THpp.hpp"
 
-#include<opencv/cv.h>
+#include <opencv/cv.h>
+//#include "opencv2/features2d/features2d.hpp"
 #include "opencv2/nonfree/features2d.hpp"
 #include "common.hpp"
 
@@ -229,19 +230,19 @@ static int libopencv24_(DetectExtract)(lua_State *L) {
     
     extractor = DescriptorExtractor::create(extractorType);
   */
-  if (extractorType.compare("SURF") == 0) {
-    extractor = new SurfDescriptorExtractor; 
-  } else if (extractorType.compare("SIFT") == 0) { 
-    extractor = new SiftDescriptorExtractor;
-  } else if (extractorType.compare("BRIEF") == 0) { 
-    extractor = new BriefDescriptorExtractor;
-  } else if (extractorType.compare("ORB") == 0) { 
-    extractor = new OrbDescriptorExtractor;
-  } else {
-    printf("Warning unrecognized DescriptorExtractor (%s) using SURF\n",
-           etype);
-    extractor = new SurfDescriptorExtractor;
-  }
+  // if (extractorType.compare("SURF") == 0) {
+  //   extractor = new SurfDescriptorExtractor; 
+  // } else if (extractorType.compare("SIFT") == 0) { 
+  //   extractor = new SiftDescriptorExtractor;
+  // } else if (extractorType.compare("BRIEF") == 0) { 
+  //   extractor = new BriefDescriptorExtractor;
+  // } else if (extractorType.compare("ORB") == 0) { 
+  //   extractor = new OrbDescriptorExtractor;
+  // } else {
+  //   printf("Warning unrecognized DescriptorExtractor (%s) using SURF\n",
+  //          etype);
+  //   extractor = new SurfDescriptorExtractor;
+  // }
   /*
     } else if (extractorType.compare("OpponentSIFT") == 0) { 
     extractor = new OpponentSiftDescriptorExtractor;
@@ -250,22 +251,22 @@ static int libopencv24_(DetectExtract)(lua_State *L) {
     } else if (extractorType.compare("FREAK") == 0) { 
     extractor = new FreakDescriptorExtractor;
   */
-  extractor->compute(img_cv_gray, keyPoints, feat_cv);
+  // extractor->compute(img_cv_gray, keyPoints, feat_cv);
   
-  feat.resize(feat_cv.rows,feat_cv.cols);
-  positions.resize(foundPts, 2);
+  // feat.resize(feat_cv.rows,feat_cv.cols);
+  // positions.resize(foundPts, 2);
   
-  for (i = 0; i < foundPts; ++i) {
-    const KeyPoint & kpt = keyPoints[i];
-    positions(i, 0) = kpt.pt.x;
-    positions(i, 1) = kpt.pt.y;
-  }
+  // for (i = 0; i < foundPts; ++i) {
+  //   const KeyPoint & kpt = keyPoints[i];
+  //   positions(i, 0) = kpt.pt.x;
+  //   positions(i, 1) = kpt.pt.y;
+  // }
   
-  for(i = 0; i < (size_t)feat_cv.rows; i++){ 
-    for(j = 0; j < (size_t)feat_cv.cols; j++){
-      feat(i,j) = feat_cv.at<float>(i,j);
-    }
-  }
+  // for(i = 0; i < (size_t)feat_cv.rows; i++){ 
+  //   for(j = 0; j < (size_t)feat_cv.cols; j++){
+  //     feat(i,j) = feat_cv.at<float>(i,j);
+  //   }
+  // }
   
   return 0;
 }

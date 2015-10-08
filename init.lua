@@ -133,15 +133,18 @@ function opencv24.DenseOpticalFlow(...)
       {arg='flowguess', type='torch.Tensor', default=nil,
        help="Initial guess for the initialization of the flow (doesn't seem to work too well with farnebach)"}
    )
+  
+   
    if self.im1:nDimension() == 3 then
       self.im1 = image.rgb2y(self.im1)[1]
    end
    if self.im2:nDimension() == 3 then
       self.im2 = image.rgb2y(self.im2)[1]
    end
+
    local im1_cv = opencv24.TH2CVImage(self.im1)
    local im2_cv = opencv24.TH2CVImage(self.im2)
-   winr = image.display{image={im1_cv, im2_cv}, win=winr}
+   --winr = image.display{image={im1_cv, im2_cv}, win=winr}
    local flow = torch.FloatTensor(2, im1_cv:size(1), im1_cv:size(2))
    if self.flowguess ~= nil then
       flow:copy(self.flowguess)
