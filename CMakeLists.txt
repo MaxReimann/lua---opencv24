@@ -6,5 +6,8 @@ FIND_PACKAGE(OpenCV REQUIRED)
 SET(src THpp.cpp opencv.cpp common.cpp)
 SET(luasrc init.lua)
 
+SET(GCC_COMPILE_FLAGS "-g")
+SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COMPILE_FLAGS}" )
+
 ADD_TORCH_PACKAGE(opencv24 "${src}" "${luasrc}" "OpenCV 2.4")
 TARGET_LINK_LIBRARIES(opencv24 luaT TH ${OpenCV_LIBS})

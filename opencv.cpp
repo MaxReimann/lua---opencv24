@@ -7,6 +7,7 @@ extern "C" {
 
 #include<opencv/cv.h>
 #include<opencv/cvaux.h>
+#include "opencv2/imgproc/imgproc.hpp"
 #include "common.hpp"
 
 using namespace TH;
@@ -64,6 +65,56 @@ static int TrackPoints(lua_State* L) {
   
   return 0;
 }
+
+//============================================================
+// opencv remap
+//
+
+static int Remap(lua_State *L) {
+  setLuaState(L);
+  Tensor<ubyte> src_image  = FromLuaStack<Tensor<ubyte> >(1);
+  Tensor<ubyte> dst_image  = FromLuaStack<Tensor<ubyte> >(2);
+  Tensor<float>  map1 = FromLuaStack<Tensor<float > >(3); //
+  const char *  iMode      = lua_tostring(L,4);
+  string interpolationMode(iMode);
+
+  
+  mat3b src_image_cv = TensorToMat3b(src_image);
+  mat3b dst_image_cv = TensorToMat3b(dst_image);
+
+  int h = src_image_cv.size().height, w = src_image_cv.size().width;
+  Mat map1_cv(h, w, CV_32FC2); //always (x,y) points, don't use map2
+  Mat empty_map;
+   
+  for (int i = 1; i < h; ++i)
+    for (int j = 1; j < w; ++j)
+      map1_cv.at<Vec2f>(i,j) = Vec2f(map1(0,i,j), map1(1,i,j));
+
+  
+  if(interpolationMode.compare("INTER_LINEAR"))
+  {
+    remap(src_image_cv, dst_image_cv, map1_cv, empty_map, CV_INTER_LINEAR,  BORDER_CONSTANT);
+  }
+  else if (interpolationMode.compare("INTER_CUBIC"))
+{
+  remap(src_image_cv, dst_image_cv, map1_cv, empty_map, CV_INTER_CUBIC,  BORDER_CONSTANT);
+}
+else if (interpolationMode.compare("INTER_AREA"))
+{
+  remap(src_image_cv, dst_image_cv, map1_cv, empty_map, CV_INTER_AREA,  BORDER_CONSTANT);
+}
+
+  for (int i = 0; i < h; ++i)
+    for (int j = 0; j < w; ++j) {
+      Vec3b & v = dst_image_cv.at<Vec3b>(i, j);
+      dst_image(0, i, j) = v[0];
+      dst_image(1, i, j) = v[1];
+      dst_image(2, i, j) = v[2];
+    }
+  
+  return 0;
+}
+
 
 //============================================================
 // Dense Optical Flow
@@ -342,7 +393,9 @@ static const luaL_reg libopencv24_init [] =
     {"DeleteFREAK",  DeleteFREAK},
     {"ComputeFREAK", ComputeFREAK},
     {"ComputeFREAKfromKeyPoints", ComputeFREAKfromKeyPoints},
+    {"Remap",        Remap},
     {"TrainFREAK",   TrainFREAK},
+    {"TestingFunc",  TestingFunc},
     {"MatchFREAK",   MatchFREAK},
     {"ComputeFAST",  ComputeFAST}, 
     {"Version",      version},

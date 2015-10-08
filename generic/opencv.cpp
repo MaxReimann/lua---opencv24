@@ -116,6 +116,9 @@ static int libopencv24_(DenseOpticalFlowFarnebach)(lua_State *L) {
   return 0;
 }
 
+
+
+
 //============================================================
 // Detect Extract
 // 
@@ -316,6 +319,7 @@ static const luaL_reg libopencv24_(Main__) [] = {
   {"TH2CVImage",       libopencv24_(TH2CVImage)},
   {"CV2THImage",       libopencv24_(CV2THImage)},
   {"DenseOpticalFlowFarnebach", libopencv24_(DenseOpticalFlowFarnebach)},
+//  {"Remap", libopencv24_(Remap)},
   {"DetectExtract",    libopencv24_(DetectExtract)},
   {"CornerHarris",     libopencv24_(CornerHarris)},
   {NULL, NULL}  /* sentinel */

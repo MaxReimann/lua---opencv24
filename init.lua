@@ -177,6 +177,30 @@ function opencv24.DenseOpticalFlow(...)
 end
 
 --------------------------------------------------------------------------------
+-- remap
+--
+function opencv24.Remap(...)
+   local self = {}
+   xlua.unpack_class(
+      self, {...}, 'opencv24.Remap', help_desc,
+      {arg='src', type='torch.Tensor', help='image'},
+      {arg='map', type='torch.Tensor', help='map(x,y)'},
+      {arg='interpolation', type='string', default='INTER_LINEAR', 
+      help='INTER_LINEAR|INTER_CUBIC'} )
+   local src_cv = opencv24.TH2CVImage(self.src)
+   local dst_image = opencv24.TH2CVImage(self.src)--torch.Tensor(src_cv:size(2), src_cv:size(3))
+
+   local map = self.map:type('torch.FloatTensor')
+
+   libopencv24.Remap(src_cv, dst_image, map, self.interpolation)
+
+   local out = opencv24.CV2THImage(dst_image)
+
+   return out
+end
+
+
+--------------------------------------------------------------------------------
 -- CornerHarris
 --
 
@@ -197,6 +221,7 @@ function opencv24.CornerHarris(...)
                                 self.blocksize,self.ksize,self.k)
    return out
 end
+
 
 --------------------------------------------------------------------------------
 -- CornerHarris
